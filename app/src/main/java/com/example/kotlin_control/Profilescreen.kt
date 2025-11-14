@@ -14,7 +14,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.Divider
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -43,13 +44,13 @@ fun ProfileScreen() {
     val primaryTextColor = Color(0xFF212121) // Near-black
     val secondaryTextColor = Color(0xFF757575) // A medium gray for bio/location
     val chipColor = Color(0xFFE0E0E0) // Light gray for chips
-    val borderColor = Color.LightGray
+    val cardBackgroundColor = Color.White // Cards will be white
 
     // Main column, now scrollable
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor) // --- NEW COLOR ---
+            .background(backgroundColor)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
@@ -67,7 +68,7 @@ fun ProfileScreen() {
                 .clip(CircleShape)
                 .border(
                     width = 4.dp,
-                    color = accentColor, // --- NEW COLOR ---
+                    color = accentColor,
                     shape = CircleShape
                 )
         )
@@ -80,13 +81,13 @@ fun ProfileScreen() {
             fontSize = 26.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Cursive,
-            color = primaryTextColor // --- NEW COLOR ---
+            color = primaryTextColor
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "@l.1wuu | Android Developer", // <-- UPDATED TEXT
+            text = "@l.1wuu | Android Developer",
             fontSize = 16.sp,
-            color = secondaryTextColor // --- NEW COLOR ---
+            color = secondaryTextColor
         )
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -98,101 +99,129 @@ fun ProfileScreen() {
             Icon(
                 imageVector = Icons.Default.LocationOn,
                 contentDescription = "Location",
-                tint = secondaryTextColor, // --- NEW COLOR ---
+                tint = secondaryTextColor,
                 modifier = Modifier.size(16.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = "Nairobi",
                 fontSize = 16.sp,
-                color = secondaryTextColor // --- NEW COLOR ---
+                color = secondaryTextColor
             )
         }
 
-        // --- Divider ---
-        Spacer(modifier = Modifier.height(24.dp))
-        Divider(color = borderColor, thickness = 1.dp, modifier = Modifier.padding(horizontal = 32.dp))
+        // --- Space before cards ---
         Spacer(modifier = Modifier.height(24.dp))
 
-        // --- Languages Section ---
-        Text(
-            text = "Languages",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = accentColor // --- NEW COLOR ---
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        FlowRow(
+        // --- Languages Section (NOW A CARD) ---
+        Card(
             modifier = Modifier
-                .padding(horizontal = 32.dp),
-            horizontalArrangement = Arrangement.Center
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp), // Give card horizontal margin
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(containerColor = cardBackgroundColor),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
-            LanguageChip(name = "Kotlin", color = chipColor, textColor = primaryTextColor)
-            LanguageChip(name = "Java", color = chipColor, textColor = primaryTextColor)
-            LanguageChip(name = "Python", color = chipColor, textColor = primaryTextColor)
-            LanguageChip(name = "C", color = chipColor, textColor = primaryTextColor)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp), // Inner padding for card content
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Languages",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = accentColor
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                FlowRow(
+                    modifier = Modifier.padding(horizontal = 16.dp), // Padding for the chips
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    LanguageChip(name = "Kotlin", color = chipColor, textColor = primaryTextColor)
+                    LanguageChip(name = "Java", color = chipColor, textColor = primaryTextColor)
+                    LanguageChip(name = "Python", color = chipColor, textColor = primaryTextColor)
+                    LanguageChip(name = "C", color = chipColor, textColor = primaryTextColor)
+                }
+            }
         }
 
-        // --- Divider ---
-        Spacer(modifier = Modifier.height(24.dp))
-        Divider(color = borderColor, thickness = 1.dp, modifier = Modifier.padding(horizontal = 32.dp))
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp)) // Space between cards
 
-        // --- Socials Section (Now Clickable) ---
-        Text(
-            text = "Socials",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = accentColor // --- NEW COLOR ---
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        val context = LocalContext.current
-        Column(
-            modifier = Modifier.padding(horizontal = 40.dp),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+        // --- Socials Section (NOW A CARD) ---
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp), // Give card horizontal margin
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(containerColor = cardBackgroundColor),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
-            SocialItem(
-                icon = painterResource(id = R.drawable.sufer), // Your icon
-                text = "0745165115",
-                iconColor = accentColor, // We WANT this one tinted blue
-                textColor = secondaryTextColor,
-                onClick = {
-                    val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:0745165115"))
-                    context.startActivity(intent)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp), // Inner padding for card content
+                horizontalAlignment = Alignment.CenterHorizontally // Center title
+            ) {
+                Text(
+                    text = "Socials",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = accentColor
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                val context = LocalContext.current
+                Column(
+                    modifier = Modifier.padding(horizontal = 24.dp), // Padding for social items
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    SocialItem(
+                        icon = painterResource(id = R.drawable.sufer), // Your icon
+                        text = "0745165115",
+                        iconColor = accentColor,
+                        textColor = secondaryTextColor,
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:0745165115"))
+                            context.startActivity(intent)
+                        }
+                    )
+                    SocialItem(
+                        icon = painterResource(id = R.drawable.google), // Your icon
+                        text = "mutisogift2@gmail.com",
+                        iconColor = Color.Unspecified,
+                        textColor = secondaryTextColor,
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:mutisogift2@gmail.com"))
+                            context.startActivity(intent)
+                        }
+                    )
+                    SocialItem(
+                        icon = painterResource(id = R.drawable.github), // Your icon
+                        text = "MutuaGift",
+                        iconColor = Color.Unspecified,
+                        textColor = secondaryTextColor,
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/MutuaGift"))
+                            context.startActivity(intent)
+                        }
+                    )
+                    SocialItem(
+                        icon = painterResource(id = R.drawable.instagram), // Your icon
+                        text = "l.1wuu",
+                        iconColor = Color.Unspecified,
+                        textColor = secondaryTextColor,
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/l.1wuu"))
+                            context.startActivity(intent)
+                        }
+                    )
                 }
-            )
-            SocialItem(
-                icon = painterResource(id = R.drawable.google), // Your icon
-                text = "mutisogift2@gmail.com",
-                iconColor = Color.Unspecified, // <-- THIS IS THE FIX
-                textColor = secondaryTextColor,
-                onClick = {
-                    val intent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:mutisogift2@gmail.com"))
-                    context.startActivity(intent)
-                }
-            )
-            SocialItem(
-                icon = painterResource(id = R.drawable.github), // Your icon
-                text = "MutuaGift",
-                iconColor = Color.Unspecified, // <-- THIS IS THE FIX
-                textColor = secondaryTextColor,
-                onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/MutuaGift"))
-                    context.startActivity(intent)
-                }
-            )
-            SocialItem(
-                icon = painterResource(id = R.drawable.instagram), // Your icon
-                text = "l.1wuu", // <-- UPDATED TEXT
-                iconColor = Color.Unspecified, // <-- THIS IS THE FIX
-                textColor = secondaryTextColor,
-                onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/l.1wuu"))
-                    context.startActivity(intent)
-                }
-            )
+            }
         }
+
+        // --- Bottom Padding ---
         Spacer(modifier = Modifier.height(40.dp))
     }
 }
@@ -229,7 +258,7 @@ fun SocialItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
-            .padding(vertical = 4.dp)
+            .padding(vertical = 4.dp) // Smaller padding for list items
     ) {
         Icon(
             painter = icon,
@@ -237,7 +266,7 @@ fun SocialItem(
             tint = iconColor, // Use the provided icon color
             modifier = Modifier.size(24.dp)
         )
-        Spacer(modifier = Modifier.width(16.dp)) // <-- TYPO IS FIXED HERE
+        Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = text,
             fontSize = 16.sp,
