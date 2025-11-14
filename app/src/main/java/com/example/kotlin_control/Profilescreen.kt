@@ -14,12 +14,25 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
+// --- NEW IMPORTS FOR DIALOG & TEXT FIELDS ---
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
+// --- END NEW IMPORTS ---
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+// --- IMPORTS FOR STATE ---
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+// --- END IMPORTS ---
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,7 +59,16 @@ fun ProfileScreen() {
     val chipColor = Color(0xFFE0E0E0) // Light gray for chips
     val cardBackgroundColor = Color.White // Cards will be white
 
-    // Main column, now scrollable
+    // --- STATE VARIABLES ---
+    // These hold the "source of truth" for your profile data
+    var name by remember { mutableStateOf("Gift") }
+    var bio by remember { mutableStateOf("@l.1wuu | Android Developer") }
+    var location by remember { mutableStateOf("Nairobi") }
+
+    // This state variable controls if the edit dialog is shown or not
+    var showEditDialog by remember { mutableStateOf(false) }
+
+    // --- Main column, now scrollable ---
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -77,7 +99,7 @@ fun ProfileScreen() {
 
         // --- User Info ---
         Text(
-            text = "Gift",
+            text = name, // <-- Uses state
             fontSize = 26.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Cursive,
@@ -85,7 +107,7 @@ fun ProfileScreen() {
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "@l.1wuu | Android Developer",
+            text = bio, // <-- Uses state
             fontSize = 16.sp,
             color = secondaryTextColor
         )
@@ -104,11 +126,25 @@ fun ProfileScreen() {
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "Nairobi",
+                text = location, // <-- Uses state
                 fontSize = 16.sp,
                 color = secondaryTextColor
             )
         }
+
+        // --- EDIT PROFILE BUTTON ---
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = {
+                // When clicked, just show the dialog
+                showEditDialog = true
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = accentColor),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Text(text = "Edit Profile")
+        }
+        // --- END EDIT BUTTON ---
 
         // --- Space before cards ---
         Spacer(modifier = Modifier.height(24.dp))
@@ -223,6 +259,67 @@ fun ProfileScreen() {
 
         // --- Bottom Padding ---
         Spacer(modifier = Modifier.height(40.dp))
+    }
+
+    // --- NEW EDIT PROFILE DIALOG ---
+    // This will only be "composed" (built) if showEditDialog is true
+    if (showEditDialog) {
+        // These temporary states hold the text field inputs
+        // They start with the *current* profile info
+        var tempName by remember { mutableStateOf(name) }
+        var tempBio by remember { mutableStateOf(bio) }
+        var tempLocation by remember { mutableStateOf(location) }
+
+        AlertDialog(
+            onDismissRequest = { showEditDialog = false }, // Close if user clicks outside
+            title = { Text("Edit Profile") },
+            text = {
+                // A column to hold our text fields
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = tempName,
+                        onValueChange = { tempName = it },
+                        label = { Text("Name") }
+                    )
+                    OutlinedTextField(
+                        value = tempBio,
+                        onValueChange = { tempBio = it },
+                        label = { Text("Bio") }
+                    )
+                    OutlinedTextField(
+                        value = tempLocation,
+                        onValueChange = { tempLocation = it },
+                        label = { Text("Location") }
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        // --- THIS IS THE KEY ---
+                        // On "Save", update the *real* state variables
+                        // with the temporary ones.
+                        name = tempName
+                        bio = tempBio
+                        location = tempLocation
+                        // And close the dialog
+                        showEditDialog = false
+                    }
+                ) {
+                    Text("Save")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        // Just close the dialog, changes are discarded
+                        showEditDialog = false
+                    }
+                ) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 }
 
