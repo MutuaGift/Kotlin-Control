@@ -46,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.auth.FirebaseAuth
+import coil.compose.AsyncImage
 
 // This annotation is needed for FlowRow
 @OptIn(ExperimentalLayoutApi::class)
@@ -86,17 +87,23 @@ fun ProfileScreen() {
         Spacer(modifier = Modifier.height(40.dp))
 
         // --- Profile Image ---
-        Image(
-            painter = painterResource(id = R.drawable.ben), // Your image
-            contentDescription = "Profile picture",
-            modifier = Modifier
-                .size(120.dp)
-                .clip(CircleShape)
-                .border(
-                    width = 4.dp,
-                    color = accentColor,
-                    shape = CircleShape
-                )
+//        Image(
+//            painter = painterResource(id = R.drawable.ben), // Your image
+//            contentDescription = "Profile picture",
+//            modifier = Modifier
+//                .size(120.dp)
+//                .clip(CircleShape)
+//                .border(
+//                    width = 4.dp,
+//                    color = accentColor,
+//                    shape = CircleShape
+//                )
+//        )
+
+        AsyncImage(
+            model = currentUser?.photoUrl,
+            contentDescription = "User Profile Picture",
+            modifier = Modifier.fillMaxSize(),
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -374,11 +381,4 @@ fun SocialItem(
             color = textColor // Use the provided text color
         )
     }
-}
-
-// --- Preview Function ---
-@Preview(showBackground = true)
-@Composable
-fun ProfileScreenPreview() {
-    ProfileScreen()
 }
