@@ -45,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseAuth
 
 // This annotation is needed for FlowRow
 @OptIn(ExperimentalLayoutApi::class)
@@ -67,8 +68,11 @@ fun ProfileScreen() {
 
     // This state variable controls if the edit dialog is shown or not
     var showEditDialog by remember { mutableStateOf(false) }
+    val firebase = FirebaseAuth.getInstance()
+    val currentUser = firebase.currentUser
+    val userName = currentUser?.displayName ?: ""
 
-    // --- Main column, now scrollable ---
+    // --- Main column, now scrollable ---Elvis
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -99,7 +103,7 @@ fun ProfileScreen() {
 
         // --- User Info ---
         Text(
-            text = name, // <-- Uses state
+            text = userName, // <-- Uses state
             fontSize = 26.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Cursive,
